@@ -86,7 +86,7 @@ CompassAnalyzer <- R6::R6Class(
                     function(metareaction_id) {
                         group_A_values <- group_A_values_per_metareaction[,metareaction_id]
                         group_B_values <- group_B_values_per_metareaction[,metareaction_id]
-                        wilcoxon_result_obj <- wilcox.test(group_A_values, group_B_values)
+                        wilcoxon_result_obj <- t.test(group_A_values, group_B_values)
                         wilcoxon_result_tbl <- data.frame(
                             metareaction_id = metareaction_id,
                             wilcoxon_statistic = wilcoxon_result_obj$statistic,
@@ -98,7 +98,7 @@ CompassAnalyzer <- R6::R6Class(
                     }
                 ) %>%
                 tibble::as_tibble() %>%
-                dplyr::mutate(adjusted_p_value = p.adjust(dplyr::pull(., p_value), method = "BH"))
+                dplyr::mutate(adjusted_p_value = p.adjust(dplyr::pull(., p_value), method = "none"))
             if (!for_metareactions) {
                 wilcoxon_results %<>% dplyr::rename(reaction_id = metareaction_id)
             }
